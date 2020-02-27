@@ -1,0 +1,145 @@
+\chapter{Kryptogravarphie}
+\section{Hashfunktion}
+\begin{equation*}
+    h: D \to S \text{ mit} \abs{D} \geq \abs{S}
+\end{equation*}
+gewünschte Eigenschaften:
+\begin{itemize}
+    \item Kompression: $\abs{D} \gg \abs{S}$
+    \item Chaotisch
+    \item Surjektivität
+    \item Effizienz
+\end{itemize}
+z.B. CRC-32
+
+\subsection{Kryptogravarphische Hashfunktion}
+\begin{itemize}
+    \item Einwegfunktion aus $h(m)$ lässt sich $m$ quasi nicht berechnen
+    \item Schwache Kollisionsresistenz: gegeben $h = \text{hash}(m)$, 
+        dann lässt sich praktisch kein $m'$ mit $\text{hash}(m') = h$,
+        finden (natürlich muss gelten $m \neq m'$)
+    \item Starke Kollisionsresistenz: es lassen sich praktisch kein
+        $m$ und $m'$ (mit $m \neq m'$) finden, so dass gilt:
+        $\text{hash}(m) = \text{hash}(m')$.
+\end{itemize}
+z.B. SHA-2, SHA-3, RIPEMD (nicht mehr SHA-1, MD5).
+
+\subsection{Hash-based Message Authentication Code (HMAC)}
+Wer $k$ und $y = h_k(x)$ kennt, kann prüfen, ob $x$ sich verändert hat, oder verändert wurde:
+\begin{equation*}
+    {\text{HMAC}}_k(x) = h\left( (k \oplus p_1) || h\left((k \oplus p_2) || x\right)\right)
+\end{equation*}
+mit:
+\begin{itemize}
+    \item $h$: beliebige (krypthogravarphische) Hashfunktion
+    \item $p_x$: vordefinierte Padding Werte
+    \item $\oplus$: XOR
+    \item $||$: Konkatenation
+\end{itemize}
+z.B. HMAC-SHA256, also HMAC mit SHA256 als $h$.
+
+\section{Zufallszahlen}
+\subsection{Determinisitische RNGs (Pseudozufallsgeneratoren)}
+z.B.: Linearer Kongruenz-Generator, Mersenne Twister (aber nicht kryptogravarphisch).
+
+Sichere PRNGs basieren auf Sicherheit von Berechnungsproblemen.
+
+\subsection{Nicht-deterministische RNGs}
+Nutzung externer (oftmals physikalischer) Prozesse:
+\begin{itemize}
+    \item Thermisches Rauschen
+    \item Radioaktiver Zerfall
+    \item Mausbewegungen...
+\end{itemize}
+
+\subsection{Hybride Ansätze}
+Nichtdeterminisitischer Wert, der als Seed für einen PRNG dient.
+
+\subsection{Kriterien für gute (krypthogravarphische) RNGs}
+\begin{itemize}
+    \item Folgt einer (bekannten) Verteilung (meist Gleichverteilt)
+    \item Statistische Unabhängigkeit (weiß)
+    \item Geschwindigkeit
+\end{itemize}
+
+Für determinisistische RNGs gilt vor allem: lange Periode.
+
+Für nicht-determinisitische RNGs: Keine Reproduzierbarkeit.
+
+\section{Verschlüsselungsalgorithmen}
+Notation:
+\begin{itemize}
+    \item A, B: Alice, Bob (Kommunikationpartner)
+    \item $m$: Klartext (\qq{Message})
+    \item $c$: Geheimtext (\qq{Ciphertext})
+    \item $k$: gemeinsamer geheimer Schlüssel
+    \item ${pk}_\text{Bob}$: öffentlicher Schlüssel von Bob
+    \item ${sk}_\text{Bob}$: geheimer Schlüssel von Bob
+    \item E: Eve (passiver Angreifer)
+    \item M: Mallory (aktiver Angreifer)
+    \item T: Trent (vertrauenswürdige Instanz)
+\end{itemize}
+
+\subsection{Symmetrische Kryptogravarphie (\qq{Secret Key Crypto})}
+\subsubsection{Advanced Encryption Standard (AES)}
+\begin{itemize}
+    \item Nachfolger von DES.
+    \item Blockchiffre (Blocklänge 128 Bit, Schlüssellänge 128, 192, 256 Bit)
+    \item Kann auch als RNG und Hash genutzt werden
+    \item Gilt als sicher
+    \item Effizient in Soft- und Hardware implementierbar
+\end{itemize}
+Verwendung: IEEE 802.11, TLS, SSH, IPSec, GnuPG
+
+\subsection{Asymmetrische Kryptogravarphie (\qq{Public Key Crypto})}
+\subsubsection{Diffie-Hellmann Schlüsselaustauschprotokoll}
+Gegeben bei beiden: $g$, $p$. Alice wählt $a$, Bob wählt $b$.
+
+Alice berechnet $A$:
+\begin{equation*}
+    A = g^a \mod p
+\end{equation*}
+Alice übermittelt $A$ an Bob, dieser berechnet $B$:
+\begin{equation*}
+    B = g^b \mod p
+\end{equation*}
+
+Bob übermittelt $B$ an Alice.
+
+Keyberechnung für Alice:
+\begin{equation*}
+    k = B^a \mod p
+\end{equation*}
+
+Keyberechnung für Bob:
+\begin{equation*}
+    k = A^b \mod p
+\end{equation*}
+
+Probleme: MitM, Initialwerte müssen sorgfältig gewählt werden.
+
+\subsubsection{RSA}
+\begin{enumerate}
+    \item Wähle zufällige Primzahlen $p$ und $q$ (mit $p \neq q$)
+    \item Berechne $n = pq$
+    \item Berechne $\varphi(n) = (p-1)(q-1)$ (Anzahl der Zahlen $<n$, die zu $n$ teilerfremd sind)
+    \item Wähle $e$ teilerfremd zu $\varphi(n)$.
+    \item Berechne mit euklidischem Algorithmus $d$ als Multiplikativ-Inverses von $e$, also so dass gilt
+        \begin{equation*}
+            e d \equiv 1 \mod \varphi(n)
+        \end{equation*}
+    \item Verwendung:
+        \begin{eqnarray*}
+            C &=& M^e \mod n \\
+            M &=& C^d \mod n
+        \end{eqnarray*}
+\end{enumerate}
+mit:
+\begin{itemize}
+    \item $e$, $n$: öffentlicher Schlüssel
+    \item $d$, $d$: geheimer Schlüssel
+    \item $p$, $q$, $\varphi(n)$: nicht mehr benötigt
+\end{itemize}
+
+\subsubsection{Elliptic Curve Kryptographie}
+Elliptische Kurven bilden eine abelsche Gruppe, auf der auch der RSA Algorithmus berechnet werden kann. Der diskrete Logarithmus für elliptische Kurven ist jedoch noch komplizierter zu berechnen. Folglich ist eine Verschlüsselung bei gleicher Schlüssellänge sicherer.
