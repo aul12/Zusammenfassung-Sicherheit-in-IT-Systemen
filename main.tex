@@ -41,6 +41,7 @@
 \DeclareMathOperator*{\Expectation}{E}
 \newcommand{\T}[1]{#1^\text{T}}
 \newcommand{\E}[1]{\Expectation\left\{#1\right\}}
+\newcommand{\qq}[1]{\glqq{}#1\grqq{}}
 
 \tikzset{
     max width/.style args={#1}{
@@ -69,5 +70,15 @@
     \pagebreak
     \tableofcontents
     \pagebreak
+    \input{intro.tex}
+    \input{crypto.tex}
+    \input{auth.tex}
+    \input{access.tex}
+    \input{software.tex}
+    \input{host.tex}
+    \input{embedded.tex}
+    \input{network.tex}
+    \input{web.tex}
+    \input{privacy.tex}
 \end{document}
 

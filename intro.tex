@@ -1,0 +1,122 @@
+\chapter{Grundlagen}
+Zuverlässigkeit (Dependability) eines Systems besteht aus:
+\begin{itemize}
+    \item Verfügbarkeit (Availability)
+    \item Verlässlichkeit (Reliability)
+    \item Sicherheit (Safety)
+    \item Integrität (Integrity)
+    \item Wartbarkeit (Maintainability)
+    \item Vertraulichkeit (Confidentiality)
+\end{itemize}
+
+Grundlegende Sicherheitsziele sind (Eselsbrücke CIA):
+\begin{itemize}
+    \item Vertraulichkeit (\textbf{C}confidentiality):
+        Schutz von Informationen vor unberechtigtem Zugriff
+    \item Integrität (\textbf{I}ntegrity):
+        Schutz vor unberechtigter Veränderung/Zerstörung
+    \item Verfügbarkeit (\textbf{A}vailibility):
+        Schutz vor Verhindern der Nutzbarkeit von Ressourcen
+\end{itemize}
+weitere Sicherheitsziele sind:
+\begin{itemize}
+    \item Identifikation bzw. Authentisierung:
+        Zuordnung eines Identifikators bzw. Verifikation einer Identität
+    \item Autorisierung bzw. Zugriffskontrolle:
+        Zuordnung von Berechtigungen
+    \item Verbindlichkeit:
+        Garantierte Rückverfolgbarkeit von Aktionen zu Aktoren
+    \item Datenschutz:
+        Die Möglicheit selbst zu entscheiden welche Informationen preisgegeben werden sollen.
+\end{itemize}
+
+Sicherheitsziele werden durch \qq{Threats} bedroht. 
+Diese sind Potentielle Fehler im System, die bei Ausnutzung Sicherheitsziele verletzen.
+
+\vspace{0.3cm}
+
+Schwachstellen (\qq{Vulnerabilities}) sind konkrete Schwachstellen, welche Sicherheitsziele bedrohen.
+
+\vspace{0.3cm}
+
+Diese werden von Angriffen (\qq{Attacks}) ausgenutzt.
+
+\section{Kategoriesierung von Angriffen}
+\subsection{Nach Intention}
+\begin{itemize}
+    \item Störung (DOS)
+    \item Unerlaubter Informationszugriff
+    \item Eindringen ins Netz/auf Knoten
+    \item Veränderung von Information
+\end{itemize}
+
+\subsection{Nach Verfahren}
+\begin{itemize}
+    \item Verstellung (Masquerading) 
+    \item Mithören (Eavesdropping)
+    \item Zugriffsverletzung
+    \item Verlust/Veränderung
+    \item Verleugnung
+    \item Fälschen
+    \item Sabotage
+\end{itemize}
+
+\subsection{Nach Angriffspunkt}
+\begin{itemize}
+    \item Netzwerk
+    \item Netzwerkdienste
+    \item Betriebssystem/Anwendung
+    \item Benutzer
+\end{itemize}
+
+\subsection{S.T.R.I.D.E. Kategorisierung (MS)}
+\begin{itemize}
+    \item Spoofing
+    \item Tampering
+    \item Repudiation
+    \item Information disclosure
+    \item Denial of Service
+    \item Elevation of privilege
+\end{itemize}
+
+\section{Sicherheitsmechanismen und -richtlinien}
+\subsection{Sicherheitsmechanismus}
+Eine Methode, Werkzeug oder Vorgehen um eine Sicherheitsrichtlinie durchzusetzten.
+
+Mögliche Mechanismen:
+\begin{itemize}
+    \item Verhinderung
+    \item Erkennung
+    \item Korrektur und Behebung
+\end{itemize}
+
+\subsection{Sicherheitsrichtlinie}
+Ein Aussage was erlaubt, und was nicht erlaubt ist.
+
+\section{Integration von Sicherheitsmechanismen}
+\qq{Weakest link}-Konzept.
+
+\section{Gesamtsystem-Sicht}
+Risikoquellen:
+\begin{itemize}
+    \item Benutzer
+    \item Organisatorische Probleme
+    \item Spezifikation, Entwurf, Implementierung
+\end{itemize}
+
+Sicherheitsmaßnahmen:
+\begin{itemize}
+    \item Krypthographie
+    \item Hardware-Bausteine
+    \item Filter, Firewalls, Intrusion Detection
+    \item Software Hardening gegen Fehler
+    \item Organisatorische Regelung, Prozesse
+    \item Gutes Design
+\end{itemize}
+
+Weitere Aspekte:
+\begin{itemize}
+    \item Kosten
+    \item Gesetzliche Vorgaben
+    \item Nutzerakzeptanz
+\end{itemize}
