@@ -1,0 +1,107 @@
+\chapter{Malware und Software Security}
+\section{Buffer Overflow}
+\subsection{Stack-Buffer-Overflow}
+Schreiben von ausführbarem Code in lokale Variable über Puffergrenze hinaus, Rücksprungadresse wird überschrieben und so der Code ausgeführt (oftmals Shellcode).
+
+\vspace{.3cm}
+
+Aufbau Stack (von hohen zu niedrigen Adressen):
+\begin{enumerate}
+    \item Argumente (ARG)
+    \item Rücksprungadresse (RET)
+    \item Basepointer (EBP)
+    \item Lokale Variablen (VAR)
+\end{enumerate}
+
+\subsubsection{Lösungen}
+\paragraph{Stack Canaries} 
+Bekannte Werte zwischen Daten und EBP.
+
+Mögliche Canary-Werte:
+\begin{itemize}
+    \item Terminator Canaries: Nutzen aus das Strings Nullterminiert sind. Nachteil: Canary Wert ist bekannt
+    \item Random Canaries: Rein zufälliger Wert
+    \item Random XOR Canaries: Zufälliger Wert $\oplus$ Kontrolldaten (z.B. Rücksprungadresse)
+\end{itemize}
+
+Vorteile:
+\begin{itemize}
+    \item Keine Systemweite Änderung
+    \item Performanceeinflüsse nur bei entsprechend kompilierten Programmen
+\end{itemize}
+Nachteile: Programm (und alle Libraries) müssen mit Stack Canaries compiliert werden
+
+\paragraph{XD und NX Bits}
+Stack-Speicherseiten als nicht ausführbar markieren.
+
+\paragraph{Typsichere Sprachen}
+Keine Out-Of-Bounds zugriffe.
+
+\paragraph{Address Space Layout Randomization (ASLR)}
+Kein laden von Programmcode an determinisitischer Adresse möglich.
+
+\paragraph{Code Signing}
+Nur signierter Code wird ausgeführt.
+
+\section{Begriffe}
+\subsection{Error}
+Design- oder Programmierfehler eines Entwicklers
+
+\subsection{Fault/Bug}
+Manifestation eines Error in einem Programm. Bugs können zu Sicherheitsproblemen führen.
+
+\subsection{Failure}
+Abweichung eines Programms vom spezifizierten Verhalten, soll durch Testing verhindert werden.
+
+\section{Software Security}
+Kritische sind:
+\begin{itemize}
+    \item Programme die erhöhte Privilegien haben
+    \item Programme die über das Netwerk erreichbar sind
+    \item Programme die Nutzereingaben irgendeiner Form akzeptieren:
+        \begin{itemize}
+            \item Direkte Benutzereingabe
+            \item Kommandozeilenargumente
+            \item Konfigurationsfiles
+            \item Daten aus Netzwerkverbindungen
+            \item Umgebungsvariablen
+        \end{itemize}
+\end{itemize}
+
+\section{Schadsoftware}
+\subsection{Unterscheidung anhand des Verbreitungswegs}
+\begin{itemize}
+    \item Virus: ein Programm, das sich verbreitet, indem es andere harmlose Programme benutz
+    \item Wurm: ein Programm, das sich selbstständig verbreitet
+    \item Trojaner: ein Programm, das sich als harmloses Programm tarnt, aber eine schädliche Funktion beinhaltet
+\end{itemize}
+
+\subsection{Mögliche Schadroutinen}
+\begin{itemize}
+    \item Daten löschen
+    \item Daten ausspionieren
+    \item Fremdzugriff ermöglichen
+    \item Rechner lahmlegen
+    \item Computer zerstören
+\end{itemize}
+
+\subsection{Botnetze}
+Ansammlung von infizierten PCs, die von zentralem Command \& Control (C\&C) Server kontrolliert werden 
+und eine schädliche Funktion ausführen.
+
+\vspace{.3cm}
+
+Nutzung: Spam-Versand, Informationssammlung, DDOS, Clickfraud
+
+\subsection{Targeted Attacks}
+Angreifer verfügen über sehr detailliertes Wissen über das Zielsystem. Malware wird direkt im Zielsystems eingesetzt, z.B. mithilfe von Social Engineering.
+
+\subsection{Ransomware}
+Schadroutine: Sperrung des PCs, Verschlüsselung aller Daten,... bis Lösegeld bezahlt wurde.
+
+\subsection{Weitere Aspekte}
+\begin{itemize}
+    \item Polymorphe Malware: verhindert Signaturbasierte Erkennung durch ständige Veränderung
+    \item Antivirus Systeme: Signaturbasiert oder Verhaltensbasiert
+    \item Antivirus Evasion: Erkennung ob in VM, ausführen nur während Bootprozess, Obfuscation
+\end{itemize}
