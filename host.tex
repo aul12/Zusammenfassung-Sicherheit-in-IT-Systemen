@@ -45,3 +45,124 @@ Best-practice:
 \end{itemize}
 
 \section{Linux Security Features}
+\begin{itemize}
+    \item No open ports
+    \item Salted SHA-512 PW hashes
+    \item SYN cookies
+    \item Filesystem capabilities
+    \item iptables
+    \item Einschränkung der Syscalls durch PR\_SET\_SECCOMP
+    \item Mandatory Access Control mit AppArmor, SELinux oder SMACK
+    \item Filesystemverschlüsselung mit eCryptFS
+    \item Userspace hardening:
+        \begin{itemize}
+            \item Stack Protector
+            \item Heap Protector
+            \item Pointer Obfuscation
+            \item ASLR (mit Position Independent Executable)
+            \item -D\_FORTIFY\_SOURCE für Funktionen ohne Stack-Buffer-Overflow Probleme
+            \item NX-Bit
+        \end{itemize}
+    \item Kernelspace hardening:
+        \begin{itemize}
+            \item 0-address protection
+            \item /dev/kmem disabled
+            \item Block module loading
+            \item Read-only data sections
+            \item Stack protector
+            \item Module RO/NX
+            \item Limiting kernel information
+            \item Filter syscalls
+        \end{itemize}
+\end{itemize}
+
+\subsection{SELinux}
+SELinux implementiert eine \qq{mandatory access control} Architektur für den Linux Kernel,
+ entwickelt von der NSA und seit 2003 vom Mainstream-Kernel.
+
+\subsection{AppArmor}
+Implementiert eine MAC als Kernel-Modul über die \qq{Linux Security Modul}(LSM) Schnittstelle, ähnlich zu SELinux
+
+\section{MacOS Security Features}
+Userspace:
+\begin{itemize}
+    \item Stack Guard
+    \item Full ASLR
+    \item Full NX
+    \item Fortify Source
+    \item Gatekeeper
+    \item Full disk encryption
+    \item Sandboxing
+    \item Privacy Controls
+\end{itemize}
+
+Kernel Space:
+\begin{itemize}
+    \item Kernel ASLR
+    \item Separate address spaces
+    \item User Approved Kernel Extension Loading
+    \item Firmware validation
+    \item System Integrity Protection
+\end{itemize}
+
+\section{iOS Security}
+\begin{itemize}
+    \item Hardware Security Modul schützt Schlüssel
+    \item Secure Boot Prozess
+    \item Isolation und App Sandboxing
+    \item Code Signing und Whitelisting
+    \item Hardened Webkit JiT Mapping (JiT Speicherbereich zweimal im Speicher, einmal XR und einmal W-only)
+    \item Enge Integration von Crypto in Hardware
+    \item Master-Key an Hardware gebunden
+    \item Auch sicher bei manipuliertem Application Host
+\end{itemize}
+
+\section{Referenzmonitore}
+\subsection{Begriffe}
+\subsubsection{Referenzmonitor}
+Abstraktes Sicherheitskonzept, welches alle Zugriffe von Subjekten auf Objekte kontrolliert.
+
+\subsubsection{Security Kernel}
+Implementierung des Referenzmonitors
+
+\subsubsection{Trusted Computing Base (TCB)}
+Beinhaltet Security Kernel plus weitere Sicherheitsmaßnahmen
+
+\subsection{Anforderungen}
+\begin{itemize}
+    \item Manipulationssicher
+    \item Muss immer aufgerufen werden
+    \item Klein genug für Analyse und Tests zur Verifikation dr Korrektheit
+\end{itemize}
+
+\section{Virtualisierung}
+Vorteile:
+\begin{itemize}
+    \item Reduktion von Hardware-Maschinen
+    \item Ausführung verschiedener Betriebssysteme
+    \item Fehlersuche, Testumgebung
+    \item Sandboxign
+    \item Isolation von Systemen und Anwendungen
+    \item Bei Kompromittierung leichter Wiederanlauf
+    \item Isolation von Fehlern
+    \item Sandboxing
+    \item Intrusion-Detection
+    \item Leichte Integration von Trusted Computin
+    \item Remote-Management
+\end{itemize}
+
+Probleme:
+\begin{itemize}
+    \item Führt oftmals zu \qq{Wildwuchs} von Systemen
+    \item Z.t. nicht aktuell wenn länger deaktiviert
+    \item Auch Virtualisierungssysteme sind nicht fehlerfrei
+    \item Kann auch von Rootkits ausgenutzt werden
+\end{itemize}
+
+\subsection{Formen der Virtualisierung}
+\subsubsection{Vollvirtualisierung}
+Gast-OS läuft in Virtual Machine wie auf \qq{echter} Hardware.
+
+\subsubsection{Paravirtualisierung}
+Gast-OS erfordert Anpassungen an Wirtssystem, weiß damit von der Virtualisierung.
+
