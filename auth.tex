@@ -1,0 +1,143 @@
+\chapter{Identifikation und Authentisierung}
+\section{Identität}
+\begin{itemize}
+    \item Eindeutig
+    \item Unabänderlich
+    \item Dauerhaft gültig
+    \item Nicht übertragbar
+\end{itemize}
+
+\section{Identifikator}
+Eine Menge von Merkmalen, die geeignet ist, die Identität einer Einheit zweifelsfrei festzustellen.
+
+\vspace{.3cm}
+
+Identifikatoren für Subjekte: Benutzer, Prozesse
+
+Identifikatoren für Objekte: Filenamen, URIs
+
+\vspace{.3cm}
+
+Identifikatoren für Menschen: Filenamen, Mailadressen
+
+Identifikatoren für Maschinen: Filehandles, Tabellen-Indizes
+
+\vspace{.3cm}
+
+Temporäre Identifikatoren: Aliase, UIDs
+
+Persistente Identifikatoren: Passnummern
+
+\subsection{Verwendung von Identifikatoren}
+Zweck:
+\begin{itemize}
+    \item Zuordnenbarkeit (Accountability)
+    \item Zugangskontrolle (Access-Control)
+\end{itemize}
+
+\section{Identifikation vs. Authentisierung}
+Identifikation: Vorlage eines Identifikators (z.B. Personalausweis)
+
+Authentisierung: Vorlage eines Identifikationsnachweises (z.B. Passwort)
+
+Authentifizierung: Prüfung einer Authentisierung
+
+\section{Authentisierung}
+Drei Grundformen:
+\begin{itemize}
+    \item \qq{Something you know} (z.B. Password)
+    \item \qq{Something you have} (z.B. Smartcard)
+    \item \qq{Something you are} (z.B. Biometrie)
+\end{itemize}
+
+Häufig auch Kombination (2-Faktor-Authentisierung).
+
+\section{Passwörter}
+\subsection{Time Memory Trade-Off Angriffe}
+Brute-force (online) Angriff vs. Code-book (offline) Angriff.
+
+\subsection{Schutz gegen Rainbow Tables (Code-books)}
+Ein zufälliger Salt Wert wird dem Password vor dem hashen zugefügt und mit dem Passwort gespeichert.
+
+\subsection{Challenge-Response Verfahren}
+Problem bei Passwörtern: Wiederverwendbarkeit.
+
+Lösung: Einmalpasswörter
+
+Ablauf:
+\begin{enumerate}
+    \item System $S$ und User $U$ vereinbaren eine geheime Funktion $f(c) = r$.
+    \item $U$ identifiziert sich gegenüber $S$
+    \item $S$ schickt $U$ eine Challenge $c$, $U$ antwortet mit $r$
+    \item $S$ überprüft ob $r = f(c)$
+\end{enumerate}
+
+\subsubsection{S/Key-Ansatz}
+System generiert Hash-Kette ausgehend von Seed $s$:
+\begin{eqnarray*}
+    p_1 &=& h(s) \\
+    p_{n+1} &=& h(p_n)
+\end{eqnarray*}
+
+Bei der $i$-ten Authentisierung fragt $S$ nach dem Passwort $p_{n+1-i}$, die Hash-Kette wird also rückwärts durchlaufen.
+
+\subsubsection{HMAC-based One-time Password Algorithm (HOTP)}
+\begin{itemize}
+    \item $K$: Geheimer Schlüssel
+    \item $C$: Zähler (z.B. Zeitbasiert, bei Google: Unix-Time/30)
+    \item Truncate$(\cdot)$: Auswahl von 4 bytes aus dem Resultat
+    \item
+        \begin{equation*}
+            \text{HMAC}(K, C) = \text{SHA1}\left(K \oplus {5C5C\ldots}_\text{HEX} || 
+                 \text{SHA1}\left(K \oplus {3636\ldots}_\text{HEX} || C\right)\right)
+        \end{equation*}
+    \item
+        \begin{equation*}
+            \text{HOTP}(K, C) = \text{Truncate}\left(\text{HMAC}(K, C)\right) \&
+                {7FFFFFFF}_\text{HEX}
+        \end{equation*}
+    \item Mit $d$ als Anzahl der Ziffern:
+        \begin{equation*}
+            \text{HOTP-Value} = \text{HOTP}(K, C) \mod 10^d
+        \end{equation*}
+\end{itemize}
+
+\section{Biometrische Authenisierung}
+Biometrische Merkmale bieten keine Eindeutige Korrektheit, nur ein Grad für die Ähnlichkeit.
+
+Tradeoff zwischen:
+\begin{itemize}
+    \item FAR: \qq{false acceptance rate}
+    \item FRR: \qq{false rejection rate}
+\end{itemize}
+zusätzlich gibt es: EER (\qq{equal error rate}).
+
+\section{Netzwerk Authentisierung}
+Problem: Netzwerk kein vertrauenswürdiger Bereich: Klartext-Passworte unsicher, Nutzung von Challenge-Response oder kryptographischen Mechanismen.
+
+\section{Zertifizierung}
+Problem: wie wird sichergestellt, dass ein Schlüssel $S_x$ wirklich zu $X$ gehört?
+
+Lösung: Vertrauenswürdige Verknüpfung von Schlüssel und Identität: Zertifikat.
+
+Bestätigung durch \qq{Trusted Third Party} (TTP), z.B. CA.
+
+Dafür: \qq{Public Key Infrastructure} (PKI).
+
+\subsection{X.509 Zertifikate}
+Standard, wird z.B. von SSL/HTTPS, S-MIME, LDAP, uvm. genutzt.
+
+\subsection{PGP - Web of Trust}
+Dezentraler Ansatz: Benutzer signieren die öffentlichen Schlüssel von aderen Benutzern.
+
+Public-Keyring speichert öffentliche Schlüssel und Signaturen von eigenen und fremden PKs.
+
+Owner Trust: Vertrauen in den Besitzer eines PK.
+
+Calculated Trust: Vertrauen in die Korrektheit eines öffentlichen Schlüssels.
+
+\subsection{Neuere Konzepte}
+\begin{itemize}
+    \item OAuth (Authentisierung bei Dienst $B$ ohne das Dienst $A$ Daten kennt)
+    \item OpenID: Single Sign In
+\end{itemize}
