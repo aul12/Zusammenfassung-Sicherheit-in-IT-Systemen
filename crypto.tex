@@ -143,3 +143,37 @@ mit:
 
 \subsubsection{Elliptic Curve Kryptographie}
 Elliptische Kurven bilden eine abelsche Gruppe, auf der auch der RSA Algorithmus berechnet werden kann. Der diskrete Logarithmus für elliptische Kurven ist jedoch noch komplizierter zu berechnen. Folglich ist eine Verschlüsselung bei gleicher Schlüssellänge sicherer.
+
+\section{Digitale Signaturen}
+Ziele: Authentisierung und Integritätsprüfung.
+
+Vorgehen:
+Es wird die Nachricht direkt versendet sowie zusätzlich der, mit dem privaten Schlüssel des Senders, verschlüsselte Hash der Nachricht. Der Empfänger kann aus der Empfangenen Nachricht ebenfalls den Hash berechnen und den empfangenen Hash mit dem öffentlichen Schlüssel des Senders entschlüsseln.
+
+\section{Randbedingungen}
+Zu beachten sind:
+\begin{itemize}
+    \item Schlüssellängen
+    \item Geschwindigkeit und Overhead kryptographischer Verfahren (Nutzerakzeptanz)
+    \item Verteilung und Speicherung von Schlüsseln
+    \item Sichere Anwendung der kryptographischen Operationen
+    \item Bruteforce ist bei allen bekannten Verfahren möglich und mit der Zeit einfacher (fortschritt bei CPUs)
+\end{itemize}
+
+Bei der Sicherheit von Kryptographischen Verfahren wird unterschieden:
+\begin{itemize}
+    \item Empirisch sicher: Analyse und Angriffsversuche legen nahe das Verfahren sicher ist
+    \item Bewiesen sicher, es kann gezeigt werden, kann das Verschlüsselung ein mathematisch hartes Problem ist
+    \item Bedingungslos sicher: Ein Angreifer gewinnt keinerlei Information aus dem verschlüsselten Text
+\end{itemize}
+
+Bedingungslos sicheres Verfahren: One-time Pad:
+\begin{eqnarray*}
+    C &=& M \oplus K \\
+    M &=& C \oplus K 
+\end{eqnarray*}
+
+\section{Geschwindigkeit von krypthographischen Operationen}
+Asymmetrische Verfahren sind um Faktor 100-1000 langsamer als symmetrische Verfahren.
+
+Daher Einsatz oft kombiniert: Schlüsseltausch mit asymmetrischen Verfahren, die Kommunikation dann mithilfe eines Symmetrischen Verfahrens und dem vorher ausgetauschten Schlüssel.
