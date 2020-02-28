@@ -1,0 +1,81 @@
+\chapter{Embedded \& Hardware Security}
+Allgemein: Viele Security Mechanismen können von tieferen Schichten kompromittiert werden.
+Hardware ist tiefste Ebene.
+
+\section{Privilege Levels}
+Mehrere Schutzringen in 80x86 Prozessoren:
+\begin{enumerate}
+    \setcounter{enumi}{-2}
+    \item Virtual Machine Monitor
+    \item Kernel
+    \item OS
+    \item I/O-Treiber
+    \item Userspace
+\end{enumerate}
+
+Datenzugriff nur auf eigener oder auf höherer Ebene, Funktionszugriff nur auf eigener Ebene.
+
+\vspace{.3cm}
+
+Jedes Speichersegment enthält ein \qq{Descriptor Privilege Level} (DPL)
+
+Prozesse haben ein \qq{Requested Privilege Level} (RPL) und ein \qq{Current Privilege Level} (CPL).
+
+Falls DPL $< \max($CPL$,$ RPL$)$ wird eine Schutzverletzung ausgelöst.
+
+Wechsel in höheren Ring durch Gates (Systemaufrufe).
+
+
+\section{Seitenkanalangriffe}
+Mögliche Seitenkanäle:
+\begin{itemize}
+    \item Stromaufnahme
+    \item EM-Strahlung
+    \item Akustisch (z.B. Lüfter, Drucker, Position auf Touchscreen durch akustische Trilateriation)
+\end{itemize}
+
+\subsection{Rowhammer und RAMBleed}
+Durch häufiges Lesen im Speicher werden Bitflips produziert.
+
+\subsection{Meltdown und Spectre}
+Speculative Execution wird ausgenutzt indem Ladezeiten für Daten gemessen wird, 
+wenn bereits geladen wurde dann in Cache und schneller.
+
+\section{Trusted Plattform Module (TPM)}
+Spezieller Hardwarebaustein, der Kryptooperationen und Schlüsselmanagement unterstützt.
+
+\section{Smartcards}
+Ermöglichen:
+\begin{itemize}
+    \item Sichere Identifikation
+    \item Sicherer Datenspeicher
+    \item Sichere Ausführungsumgebung
+\end{itemize}
+
+Bestandteile:
+\begin{itemize}
+    \item CPU
+    \item ROM
+    \item RAM
+\end{itemize}
+
+Schutzfunktionen:
+\begin{itemize}
+    \item Security by obscurity auf Hardware-Ebene
+    \item Interne Busse
+    \item ROM in tiefen Siliziumschichten
+    \item Ionenimplantierte ROM-Code (verhindert Auslesen mit Lichtmikroskop)
+    \item Abschirmung des EEPROM um Abstrahlung zu verhindern
+    \item Physikalische Zerstörung bei Manipulationsversuch
+    \item Messung der Umgebung
+    \item Trap-Door Funktionen (irreversibler Speicher Schreibschutz)n
+    \item Stromverbrauchsangleichung
+\end{itemize}
+
+\subsection{Seitenkanalangriffe}
+\begin{itemize}
+    \item Laufzeitangriffe
+    \item Cacheangriffe
+    \item Power-Attacken
+    \item Abstrahlangriffe
+\end{itemize}
