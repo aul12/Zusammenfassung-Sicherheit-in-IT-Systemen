@@ -1,0 +1,47 @@
+\chapter{Host- und Betriebssystem-Security}
+Ziele:
+\begin{itemize}
+    \item Schutz der Daten
+    \item Schutz der laufenden Prozesse
+    \item Schutz des Betriebssystems
+\end{itemize}
+
+Best-practice:
+\begin{itemize}
+    \item Saubere Grundinstallation
+    \item Arbeiten als eingeschränkter User
+    \item \qq{Nur das nötigste} installieren/aktivieren
+    \item OS-Hardening (Siehe: Center for Internet Security, Bastille Linux, Windows Defender)
+    \item Nutzung von Sicherheitssoftware:
+        \begin{itemize}
+            \item Bessere bzw. erweiterte Zugangskontrolle (z.B. ACLs)
+            \item Verschlüsselung (ssh statt telnet, TLS)
+            \item OS-Erweiterungen (SELinux, AppArmor)
+            \item Virenscanner, Spyware-Detection, Firewalls
+                (erhöht aber natürlich auch die \qq{Attack Surface})
+        \end{itemize}
+    \item Netzwerk Auditing:
+        \begin{itemize}
+            \item MS Security Baseline Analyzer
+            \item Nessus (bzw. OpenVAS)
+            \item Security Local Audit Daemon
+        \end{itemize}
+\end{itemize}
+
+\section{Windows Security Features}
+\begin{itemize}
+    \item Automatische Updates
+    \item (Aktueller) Virenscanner
+    \item Integrierte Firewall \& Defender Lösungen
+    \item Benutzer ohne Admin-Rechte
+    \item User Account Control (UAC)
+    \item Integrity Levels bei Benutzer Prozessen
+    \item Windows Defender
+    \item Verbesserungen in IE
+    \item ASLR
+    \item Kernel Patch Protection
+    \item Data Execution Prevention
+    \item Bitlocker Festplattenverschlüsselung
+\end{itemize}
+
+\section{Linux Security Features}
