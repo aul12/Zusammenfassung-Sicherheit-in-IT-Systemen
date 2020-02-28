@@ -1,0 +1,133 @@
+\chapter{Zugriffskontrolle}
+\section{Begriffe}
+\subsection{Autorisierung}
+Entscheidung, ob Subjekt $s$ Zugriff mit Operation $a$ auf Objekt $o$ hat.
+
+\subsection{Zugriffskontolle}
+Authentisierung + Autorisierung
+
+\subsection{Subjekte}
+Handelnde Einheit, die eine Operation durchführen möchte.
+
+Z.B.: Person, Prozess, Netzwerkknoten.
+
+\subsection{Objekt}
+Einheiten auf welche zugegriffen wird.
+
+Z.B.: Files, Verzeichnisse, Records in Datenbanken, Rechner
+
+\section{Zugriffs-Operationen}
+\subsection{Minimale Menge}
+\begin{itemize}
+    \item Observer
+    \item Alter
+\end{itemize}
+
+\subsection{Bell-LaPadula}
+\begin{itemize}
+    \item Execute
+    \item Append
+    \item Read
+    \item Write
+\end{itemize}
+
+\subsection{Weitere Operationen}
+\begin{itemize}
+    \item Grant/revoke
+    \item Change Owner
+\end{itemize}
+
+\section{Organisation der Zugriffsrechte}
+\subsection{Lampson's Access Control Matrix}
+Für $S$ die Subjekte, $O$ die Objekte und $A$ die Operationen ist ein Element der Matrix
+definiert als:
+\begin{equation*}
+    M_{so} \subseteq A\ \ \ s \in S, o \in O
+\end{equation*}
+
+\subsection{Access Control Lists (ACL)}
+Speichert für jedes Objekt $o$, eine List von Tupeln $(s, a)$, die festlegt, dass Subjekt $s$ auf Objekt $o$ Operation $a$ durchführen darf.
+
+\subsection{Capabilities}
+Speichert für jedes Subjekt $s$ eine Liste von Tupeln $(a, o)$ die festlegt, dass Subjekt $s$ auf Objekt $o$ Operation $a$ durchführen darf.
+
+\section{Modelle für Zugriffskontrolle}
+\subsection{Discretionary Access Control (DAC)}
+Subjekt kann Zugriffsrechte eines Objektes festlegen.
+
+\subsection{Mandatory Access Control (MAC)}
+Systemweite Regeln legen Zugriffsrechte fest.
+
+\subsection{Role-based Access Control (RBAC)}
+Subjekte werden Rollen zugewiesen. Rollen bestimmen Zugriffsrechte auf Objekte.
+
+\subsection{Attribute-based Access Control (ABAC)}
+Subjeke und Objekte haben Attribute, diese werden zur Zugriffskontrollentscheidung zu rate gezogen.
+
+\section{Implementierungen}
+In der Regel hybrider Ansatz aus mehreren Modellen.
+
+\subsection{Unix}
+Eingeschränktes ACL Modell mit Rechten für \qq{User}, \qq{Group} und \qq{Other}:
+\begin{itemize}
+    \item r: read
+    \item w: write
+    \item x: files: execute; dir: access (read file list)
+\end{itemize}
+Additionally:
+\begin{itemize}
+    \item t: directories: only file owner may delete
+    \item s: setUID, setGID. File: execute with UID/GID; Dir: create files with UID/GID.
+\end{itemize}
+
+\subsection{Linux ACLs}
+Linux unterstützt ACLs, es kann also für beliebige Objekte festgelegt werden, welche Subjekte welche Aktionen ausführen dürfen.
+
+\section{Bell-LaPadula-Modell}
+Definition von Zugriffsebenen. 
+Klassifikation von Objekten nach Zugriffslevel (Security Level),
+und Subjekten nach Freigabe (Clearance).
+
+\vspace{.3cm}
+
+Ziel: Informationsfluss zu niedrigereren Zugriffsleveln verhindern.
+
+\vspace{.3cm}
+
+Das System befindet sich zu jedem Zeitpunkt in einem Zustand.
+Ein Zustand ist ein Tripel $v = (b, M, f)$ mit:
+\begin{itemize}
+    \item $b \subseteq S \times O \times A$:
+        die Menge der aktuellen Zugriffe von Subjekten auf Objekte
+    \item $M$ ist die aktuelle Zugriffsmatrix
+    \item $f$ ist ein Tripel $(f_S, f_C, f_O)$ mit:
+        \begin{itemize}
+            \item $f_S: S \to SL$: Maximale Freigabe der Subjekte
+            \item $f_C: S \to SL$: Aktuelle Freigabe der Subjekte
+            \item $f_O: O \to SL$: Aktuelle Sicherheitsklassifikation der Objekte
+        \end{itemize}
+        Ein Subjekt kann sein $f_C$ frei in den Beschränkungen von $f_S$ wählen.
+\end{itemize}
+
+Ein Zustand ist sicher, falls gilt:
+\begin{itemize}
+    \item Simple-Security-Property: Für alle $(s, o, a) \in b$ mit $a=$ read oder $a=$ write gilt:
+        $f_O(o) \leq f_S(s)$
+    \item *-Eigenschaft:
+        \begin{itemize}
+            \item Für $a=$ append (kein lesen): $f_C(s) \leq f_O(o)$
+            \item Für $a=$ write: $f_C(s) = f_O(o)$
+            \item Für $a=$ read: $f_O(o) \leq f_C(s)$
+        \end{itemize}
+        Kurz: \qq{No read up} und \qq{No write down}.
+    \item Discretionary Security Property: $\forall (s,o,a) \in b: a \in M[s,o]$
+\end{itemize}
+
+Basic Security Theorem: Wenn der Anfangszustand und alls Zustandsübergänge sicher sind, dann sind alle erreichbaren Folgezustände sicher.
+
+\section{POSIX Capabilities}
+Problem: Autorisierung kritischer Resources auf root beschränkt (z.B. Raw Sockets für Ping), workaround mit SUID-Binaries, Anwendung läuft dann aber faktisch mit root-Rechten, potentielle Sicherheitslücke.
+
+\vspace{.3cm}
+Lösung: POSIX Capabilitites, erlauben es einzelne Capabilitites freizuschalten.
+
