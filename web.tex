@@ -1,0 +1,95 @@
+\chapter{Web Security}
+Mögliche Angriffe:
+\begin{itemize}
+    \item Angriffe auf Server/Web-Anwendungen:
+        \begin{itemize}
+            \item URL-Manipulation
+            \item Fehler in Skripten
+            \item Cross-Site-Scripting (XSS)
+            \item SQL-Injection
+            \item Remote Code Injection
+            \item Authentication Bypass
+        \end{itemize}
+    \item Angriffe auf den Browser: Engine Exploits (z.B. Renderer, Scripting, Java, Flash)
+    \item Angriffe auf die Infrastruktur: Missbrauch von TCP/IP Mechanismen
+\end{itemize}
+
+\section{Angriffe}
+\subsection{Injection}
+Nie der Korrektheit von Argumenten vertrauen
+
+\subsection{Access Control}
+Zugriffsbeschränkung auf Test- / Admin- / Statusseiten fehlt häufig (z.B. phpinfo).
+
+\subsubsection{Authentification Bypass}
+\begin{itemize}
+    \item Unzureichende Regeln für Passwort Komlexität
+    \item Schwache Passwort-Rücksetzverfahren
+    \item URL Manipulation (Presentation layer access control)
+\end{itemize}
+
+\subsection{Directory Traversal}
+\qq{Ausbruch} aus htdocs Verzeichnis und Zugriff auf nicht-freigegebene Inhalte.
+
+\subsection{Konfigurationsfehler}
+Fehlerhafte Konfiguration führt zu Sicherheitsproblemen, es sind z.B. CGI Skripte über Foren einschleusbar.
+
+\subsection{Cross Site Scripting}
+Injection von clientseitigem Skriptcode möglich, dadurch manipulation der angezeigten Daten für andere User, oder Cookie stealing möglich.
+
+\subsection{Injection Flaws}
+z.B. SQL Injection, aber auch XPath, LDAP, Shell.
+
+\subsection{Improper Error Handling}
+Zu viele Informationen an User:
+\begin{itemize}
+    \item Detaillierte Versionsinfos
+    \item Namen von Backend-Systemen
+    \item Umgebungsvariablen
+    \item Coredumps
+    \item Aber auch z.B. \qq{not found} vs. \qq{access denied}
+\end{itemize}
+
+\subsection{Rogue Proxies}
+Proxies können: Mithören, Inhalte verändern, Verbindungen blockieren.
+
+\section{Best Practices}
+\begin{itemize}
+    \item Minimales Featureset aktivieren
+    \item Versionsmeldungen abschalten
+    \item Niemals Datenquellen von außen trauen
+    \item Besondere Vorsicht bei Meta-Characters
+    \item Alte Datein löschen
+    \item Nicht im Live-System entwickeln
+    \item Backupdateien entfernen (werden im Worst-Case als Textdatei ausgeliefert, also source Verfügbar)
+    \item System aktualisieren
+p   \item Fingerprinting erschweren (keine Fehlermeldung mit Software Bezeichnung/Versionsnummern)
+\end{itemize}
+
+\section{Secure Sockets Layer (SSL) / Transport Layer Security (TLS)}
+Ziele: Authentisierung, Integrität und Vertraulichkeit:
+\begin{itemize}
+    \item Server-Authentifizierung mit Zertifikat
+    \item Client Authentifizierung (Optional)
+    \item Verschlüsselte Verbindung
+\end{itemize}
+
+Zwischen Anwendungsschicht und Transportschicht.
+
+\subsection{SSL Handshake}
+\begin{enumerate}
+    \item Teilnehmerauthentisierung anhand von Zertifikation (Client optional)
+    \item Vereinbarung der verwendeten kryptographischen Verfahren
+    \item Vereinbarung des Sitzungsschlüssels
+\end{enumerate}
+
+In einer SSL-Session beliebig viele SSL-Connections.
+
+\subsection{SSL Record Protocol}
+\begin{itemize}
+    \item Getrennt vom Handshake Protokoll
+    \item Daten symmetrisch mit Session Key verschlüsselt
+    \item MAC zur Integritätssicherung
+    \item Getrennte Schlüssel für MAC und Verschlüsselung, jeweils in Sende- und
+        Empfangsrichtung
+\end{itemize}
