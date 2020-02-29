@@ -1,0 +1,95 @@
+\chapter{Datenschutz \& Privacy}
+\section{Begriffe}
+\subsection{Privatssphäre / Privacy}
+\begin{itemize}
+    \item Kernbereich privater Lebensgestaltung
+    \item Persönliche Unversertheit
+    \item Identitätsmerkmale
+    \item Persönlichkeitsentfaltung
+\end{itemize}
+
+\subsection{Datenschutz / Data protection}
+Regelung und Abwehr von Datensammlung und Zugriff, welche die Privatsphäre beeinträchtigen würden.
+
+\subsection{Gesetzliche Regelung}
+Recht auf informationelle Selbstbestimmung.
+
+\section{Datenschutzprinzipien}
+\begin{itemize}
+    \item Datenvermeidung: Keine Erhebung von Daten wo nicht notwendig
+    \item Datensparsamkeit: Minimierung; nur Erhebung der zwingend notwendigen Daten
+    \item Zweckbindung: Daten werden nur für den intendierten Zweck genutzt
+    \item Informierte Zustimmung: Die Betroffene Persion ist über die Datenverarbeitung infromiert und stimmt ihr zu.
+    \item Datenschutzbeauftragte: Betriebe, Behörden, Bundesländer, Bund haben Beauftragte die Einhaltung überwachen.
+    \item Auskunftsrecht: Personen haben ein Recht auf Information in Bezug auf über sie erhobene Daten.
+    \item Beschwerderecht: Bei Verstößen
+    \item Korrekturrecht: Recht auf Korrektheit der Daten
+    \item Recht auf Löschung oder Sperrung
+    \item Widerspruchsrecht bei Weiterleitung
+\end{itemize}
+
+\section{Persönliche Daten}
+\begin{itemize}
+    \item Daten mit eindeutigem Personenbezug
+    \item Daten die auf eine Person beziehbar sind
+\end{itemize}
+
+Begriffe:
+\begin{itemize}
+    \item Anonymität: Unidentifizierbarkeit
+    \item Pseudonymität: Nutzung von Pseudonymen als Identifikator, kann von Anonym bis eindeutig Zuordnenbar sein
+\end{itemize}
+
+\section{Anonyme Kommunikation}
+\subsection{Onion Routing}
+\begin{itemize}
+    \item Benutzer benötigt eine Liste von Kryptographischen Onion Routern (COR) public keys
+    \item Benutzer definiert eine beliebige Route über mehrere Zwischenknoten
+    \item Austausch individueller symmetrischer Schlüssel mit jedem Zwischenknoten
+    \item Zwiebelschalenartige Verschlüssekung im Anonymisierungsnetz, Klartext am Exit Node.
+\end{itemize}
+z.B. Tor.
+
+\vspace{.3cm}
+
+Angriffsvektoren:
+\begin{itemize}
+    \item Packet correlation attacks
+    \item Falsche Nutzung von DNS (sollte via Exit Router geschehen)
+    \item Identifikation über Payload
+\end{itemize}
+
+\section{Blinde Signaturen}
+Anforderungen:
+\begin{itemize}
+    \item Anonymität
+    \item Verifizierbare Authentizität
+    \item Keine Mehrfachverwendung
+\end{itemize}
+
+\section{Anonymous Credentials}
+Beweis eines Attributes, ohne die eigene Identität preiszugeben. Außerdem keine Verknüpfbarkeit von zwei Authentisierungsvorgängen.
+
+z.B.: Konzerttickets, Alternsnachweis, ÖPNV Ticket.
+
+\section{Privacy in mobilen Netzen}
+\subsection{GSM-UMTS}
+Netzbetreiber können Engeräte lokalisieren.
+
+\subsection{WLAN}
+MAC-Adresse im Header jedes Pakets.
+
+\section{Privacy im Web}
+\subsection{Cookies}
+\begin{itemize}
+    \item HTTP Cookies (klassische Cookies)
+    \item DOM Cookies (DOM Storage)
+    \item Flash Cookies (local shared objects)
+\end{itemize}
+Oftmals auch: Browser Fingerprinting.
+
+\section{Weitere Problemfelder}
+\begin{itemize}
+    \item Pay-as-you-drive Autoversicherungen
+    \item Gesundheitskarten
+\end{itemize}
