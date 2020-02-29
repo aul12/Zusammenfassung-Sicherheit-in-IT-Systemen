@@ -1,0 +1,299 @@
+\chapter{Netzwerk-Security}
+\section{Vorgehen bei Angriffen auf Netzwerke}
+\begin{itemize}
+    \item Informationen beschaffen und Netzwerk analyisieren:
+        \begin{itemize}
+            \item Wie ist das Netz strukturiert? Verbindungen? Hosts? Segmente?
+            \item Welche Basis-Dienste laufen im Netz? DNS? DHCP? Mail? SSH? Webserver? SMB-Server? VOIP?
+            \item Welche Infos bekommt man durch Sniffen raus
+        \end{itemize}
+    \item Erkennen von Schwachstellen und Durchführen von Angriffen
+        \begin{itemize}
+            \item Suche nach bekannten Schwachstellen
+            \item Falsche Pakete schicken, Protokolle austricksen, Datenverkehr umleiten
+            \item Einzelne Hosts und Ports/Dienste genauer untersuchen
+        \end{itemize}
+    \item Dauerhafte Kontrollübernahme: Installation von rootkits, backdoors,...
+    \item Weiter Ausbreiten
+        \begin{itemize}
+            \item Suche nach Credentials, die Zugriff auf andere Systeme gestattten
+            \item Suche nach weiteren Systemen, die vim übernommenen Host erreichbar sind
+        \end{itemize}
+\end{itemize}
+
+\section{Informationsbeschaffung}
+\subsection{DNS}
+Einfache Informationbeschaffung: \qq{State of Authority} (SOA) Record mit Dig
+\begin{lstlisting}
+    dig uni-ulm.de SOA
+\end{lstlisting}
+oder Zonedumps (alle Einträge zu einer Domain):
+\begin{lstlisting}
+    dig uni-ulm.de axfr
+\end{lstlisting}
+
+\vspace{.3cm}
+
+Information über Besitzer einer Domain:
+\begin{lstlisting}
+    whois uni-ulm.de
+\end{lstlisting}
+
+\vspace{.3cm}
+
+Information über den Netzwerkaufbau
+\begin{lstlisting}
+    traceroute -I uni-ulm.de
+\end{lstlisting}
+
+\vspace{.3cm}
+
+Mit SMTP-Mailserver reden, liefert oftmals Information über Software:
+\begin{lstlisting}
+    telnet mail.uni-ulm.de 25
+\end{lstlisting}
+
+Sniffer, z.B. tcpdump, ethereal protokollieren Netzwerk auf gemeinsam genutzten Netzwerksegment.
+
+\vspace{.3cm}
+
+\lstinline{smbclient} (bzw. \lstinline{net} unter Windows) liefern Informationen zu SMB-Shares.
+
+\vspace{.3cm}
+
+TCP \lstinline{connect()} oder SYN scanning mit NMAP möglich, dadurch offene Ports und z.T. auch OS bekannt.
+
+\section{Angriffsvektoren}
+TCP/IP wurde nicht als sicheres Protokoll entworfen, mögliche Angriffe sind:
+\begin{itemize}
+    \item IP-Spoofing
+    \item TCP Hijacking
+    \item Cache Poisoning (DNS, ARP)
+    \item Routing Angriffe
+\end{itemize}
+
+\subsection{Routing}
+Ziele:
+\begin{itemize}
+    \item Traffic Redirection
+    \item Blackhole Routing
+\end{itemize}
+
+Leicht Angreifbar:
+\begin{itemize}
+    \item Im eigenen Subnetz:
+        \begin{itemize}
+            \item ARP Spoofing
+            \item DNS Spoofing/Cache Poisoning
+            \item ICMP Redirects/Router Discovery Protocol
+            \item Fake DHCP replies
+        \end{itemize}
+    \item Interior Routing:
+        \begin{itemize}
+            \item RIP: Unsicher
+            \item OSPF: Einfache Authentifizierung (Klartextpasswort/MD5-Hash)
+        \end{itemize}
+    \item Exterior Routing:
+        \begin{itemize}
+            \item BGP4: Manuelle Filter bestimmen ob Information angenommen wird
+        \end{itemize}
+\end{itemize}
+    
+\subsection{DNS}
+Angreifbar:
+\begin{itemize}
+    \item \lstinline{/etc/hosts}-File angreifbar
+    \item DNS-Hijacking:
+        \begin{itemize}
+            \item Stehlen der Domäne, z.B. nach Ablaufen
+            \item Antwort für nicht existente Domänen (z.B. googel.com)
+        \end{itemize}
+    \item DNS Cache Poisoning:
+        \begin{itemize}
+            \item Angreifer sendet Antwortpakete anstelle des DNS Server
+            \item Aber: Angreifer muss die Query-ID kennen
+        \end{itemize} 
+\end{itemize}
+
+\subsubsection{Einfache DNS Cache Poisoning Attacke}
+Herausforderungen für den Angreifer:
+\begin{itemize}
+    \item Name darf noch nicht im Cache sein
+    \item Korrektes Raten der Query ID
+    \item Angreifer muss schneller sein als echter Nameserver
+\end{itemize}
+
+Gegenmaßnahmen: Randomisierte Query IDs
+
+\vspace{.3cm}
+
+Gegengegenmaßnahme: Anfragen fluten, in circa 10 Sekunden passt dann irgendwann die QID,
+Direkt \lstinline{.com} resolven.
+
+\vspace{.3cm}
+
+Gegengegengegenmaßnahmen: Randomisierung des Source-Ports.
+
+\vspace{.3cm}
+
+Langfristig: DNSSEC
+
+\section{Denial of Service}
+Kann sich gegen quasi jede Komponente richten:
+\begin{itemize}
+    \item Hardware (z.B. Stromausfall)
+    \item OS: z.B. SYN-flood; ping-of-death
+    \item Netzwerk: Overflow, Amplifier, Router-DoS, DNS-Server
+    \item Benutzer: Spam
+\end{itemize}
+
+Mit mehreren Angreiferen: Distributed DoS (DDOS). Auch \qq{einfach Einzukaufen}.
+
+\section{Netzwerk Security}
+Komponenten der Netzwerk Security sind:
+\begin{itemize}
+    \item Firewall
+    \item Intrusion Detection/Reaction Systeme
+    \item Schutz des Netzwerkzugangs und der aktiven Netzwerkkomponenten:
+        \begin{itemize}
+            \item Management von routern, switches etc.
+            \item Physikalischer Zugang zu Ports, Schränken etc.
+            \item Überwachung, z.B. mit arpwatch
+        \end{itemize}
+    \item Content-Security
+        \begin{itemize}
+            \item Automatischer Virenfilter für Emails, am Web-Proxy, etc.
+            \item Automatische Verschlüsselung
+        \end{itemize}
+    \item Wireless Security, Mobilgeräte etc.
+\end{itemize}
+
+\section{Firewalls}
+Eine Firewall ist eine Netzwerkkomponente, die mindestens zwei Netzwerksegmente voneinander trennt und dabei den Netzwerkverkehr gemäß einer Sicherheitsrichtlinie kontrolliert und gegebenfalls unterbindet.
+
+\vspace{.3cm}
+
+Filterung der Datenströme:
+\begin{itemize}
+    \item Virus-/Java-/ActiveX Filter für Emails, HTTP,...
+        \begin{itemize}
+            \item Zentrales Filtering an einer Stelle mit aktuellen Signaturen
+            \item Umgehung des Filters durch ungewöhnliche Kompressionsverfahren etc. möglich
+        \end{itemize}
+    \item Inhaltsfilter: Zieladressen, Schlüsselwort, etc.
+    \item Anti-Spoofing: Entfernt Pakete mit gefälschten Adressen oder Broadcasr Adressen
+\end{itemize}
+
+\vspace{.3cm}
+
+Weitere Funktionen:
+\begin{itemize}
+    \item Logging der Internet-Aktivitäten
+    \item Authentifizierung und Rechtevergabe an einzelne Mitarbeiter
+    \item Bessere datenschutzrechtliche Kontrolle
+    \item NAT
+\end{itemize}
+
+\vspace{.3cm}
+
+Zu einer Firewall gehören:
+\begin{itemize}
+    \item Sicherheitsrichtlinien
+    \item Router
+    \item Paketfilter
+    \item Circuit Level Gateways
+    \item Application Level Gateways
+    \item Authentisierungsmaßnahmen
+    \item Mechanismen für Logging
+\end{itemize}
+
+\subsection{Security Policy}
+
+\subsubsection{Default-Deny}
+Zugriff ist generell verboten, sofern er nicht explizit erlaubt ist.
+
+Folge: nur wirklich benötigte Dienste werden freigegeben.
+
+Nachteil: Nutzerakzeptanz. Alle neuen Dienste müssen händisch freigeschalten werden.
+
+\subsubsection{Default-Allow}
+Zugriff ist generell erlaubt, sofern nicht explizit verboten.
+
+Folge: Gefährliche Dienste werden gesperrt.
+
+Nachteil: Der Administrator muss alle gefährlichen Dienste kennen.
+
+\subsection{Filterung des Netzwerkverkehrs}
+\subsubsection{Network-level Filtering}
+\paragraph{Layer 3}
+Filterung auf Basis von IP Paketen (Sender/Empfänger)
+
+\paragraph{Layer 4}
+Zusätzliche Filterung auf Basis von UDP/TCP Ports und Richtung des Verbindungsaufbaus
+
+\subsubsection{Application-level Filtering}
+Betrachtet auch die jeweiligen Anwendungsprotokolle, z.B. nur bestimmte HTTP Methoden oder URL, nur bestimmte Mailadressen.
+
+\subsection{Firewall Architekturen}
+\subsubsection{Packet Filtering Router}
+Router arbeitet direkt als Firewall, einfachst mögliche Architektur.
+
+\subsubsection{Screened Host}
+Es existiert eine De-Militarisierte Zone (DMZ), in diese sind Screening Router und Application Gateway. Jeglicher Traffic wird vom Application Gateway gefiltert.
+
+\subsubsection{Dual-Homed Host}
+Der Server (DHH) ist mit beiden Netzwerken (intern und extern) Verbunden, es findet aber kein Routing dazwischen statt.
+
+\subsubsection{Screened Subnet}
+Es gibt einen Exterior-Router und einen Interior-Router in der DMZ, beide kommunizieren nur mit dem Application Gateway und ihrem jeweiligen Bereich.
+
+\subsubsection{Mehrstufiges Firewall Konzept}
+Kombination von oben vorgestellten Konzepten.
+
+\subsection{Nicht gelöste Probleme}
+\begin{itemize}
+    \item Eingeschränkter Zugriff für legitime Benutzer
+    \item Kein Schutz vor Insider Attacken
+    \item Keine Kontrolle von Hintertüren (z.B. Modems, WLANS)
+    \item Akzeptanzprobleme
+\end{itemize}
+
+\section{Intrusion Detection Systeme}
+Ziel: Erkennung von Angriffen auf ein System.
+
+\vspace{.3cm}
+
+Unterscheidung in der Funktionsweise:
+\begin{itemize}
+    \item Host-basiert (HIDS):
+        \begin{itemize}
+            \item Wird auf Zielsystem installiert
+            \item Wertet Informationen des OS aus
+            \item Erkennt Angriffe auf einzelnes System
+        \end{itemize}
+    \item Netwerk-basiert (NIDS):
+        \begin{itemize}
+            \item Wird an ein oder mehreren Stellen im Netzwerk verbunden
+            \item Wertet Verkehr aus
+            \item Erkennt Angriffe auf das Netzwerk
+        \end{itemize} 
+    \item Hybrideansätze
+\end{itemize}
+
+\vspace{.3cm}
+
+Unterscheidung im Vorgehen:
+\begin{itemize}
+    \item Signatur basiert
+    \item Anomalie basiert
+    \item Spezifikation basiert
+\end{itemize}
+
+\vspace{.3cm}
+
+Bei Erkennung sollte eine Reaktion erfolgen:
+\begin{itemize}
+    \item Verbindung unterbrechen
+    \item Firewall umkonfigurieren
+    \item Pakete modifizieren
+\end{itemize}
